@@ -4,7 +4,7 @@
  */
 
 import server = require('./../server')
-
+console.log("hola hola");
 // eslint-disable-next-line no-async-promise-executor,@typescript-eslint/no-misused-promises
 export = async () => await new Promise<void>(async (resolve, reject) =>
   await server.start((err: Error) => {
