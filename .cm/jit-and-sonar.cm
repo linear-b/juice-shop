@@ -88,7 +88,7 @@ automations:
           
   jit_ignores:
     if:
-      - {{ pr.conversations | filter(attr='commenter', term='jit-ci') | map(attr='content') | match(term='#jit_ignore_accept') | some }}
+      - {{ pr.conversations | reject(attr='commenter', term='jit-ci') | map(attr='content') | match(term='#jit_ignore_accept') | some }}
     run:
       - action: add-label@v1
         args:
