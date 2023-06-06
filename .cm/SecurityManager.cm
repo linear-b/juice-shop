@@ -13,7 +13,8 @@ automations:
 
   Security_comment:
     if:
-      - {{ (jit.metrics.HIGH > 0) and not (pr.conversations | filter(attr='commenter', term='gitstream-cm') | filter (attr='content', term='This PR failed due to High severity vulnerability finding, if you don't fix it please select:') | some )}}
+      - {{ jit.metrics.HIGH > 0 }}
+      - {{ pr.conversations | filter(attr='commenter', term='gitstream-cm') | filter (attr='content', term='This PR failed due to High severity vulnerability finding, if you don't fix it please select:') | nope }}
     run:
       - action: add-comment@v1
         args:
