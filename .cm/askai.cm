@@ -35,4 +35,4 @@ automations:
 
 
 has:
-    code_changes: {{ files | extensions | match(list=['cm', 'js']) | some }}
+    code_changes: {{ files | extensions | match(list=['cm', 'js', 'ts', 'py']) | some }}
