@@ -1,0 +1,36 @@
+manifest:
+  version: 1.0
+
+automations:
+  debug:
+    if:
+      - true
+    run:
+      - action: add-comment@v1
+        args:
+          comment: |
+            PR: {{ pr | dump | safe }}
+
+  Security_comment:
+    if:
+      - {{ jit.metrics.HIGH > 0 }}
+      - {{ pr.conversations | filter(attr='commenter', term='gitstream-cm') | filter (attr='content', term='This PR failed due to High severity vulnerability finding, if you don't fix it please select:') | nope }}
+    run:
+      - action: add-comment@v1
+        args:
+          comment: |
+            This PR failed due to High severity vulnerability finding, if you don't fix it please select:
+            - [ ] I need help with that fix.
+            - [ ] I want to accept the risk, please approve.     
+            - [ ] This is false positive, please approve.
+            - [ ] This is a test / simulator environment, please exclude.
+
+  Security_comment_response:
+    if:
+      - {{ pr.conversations | filter(attr='commenter', term='gitstream-cm') | filter (attr='content', term='- [x] I need help with that fix.') | some}}
+    run:
+      - action: add-label@v1
+        args:
+          label: "Fix pending"
+
+jit: {{ pr | extractJitFindings }}
